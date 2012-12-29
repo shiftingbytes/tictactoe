@@ -12,11 +12,11 @@
 
 @interface Player : NSObject
 @property BOOL isAi;
+@property BOOL hasWon;
 @property int number;
 @property NSMutableArray *board;
 
-
 -(int) move: (int) x : (int) y;
-
+-(BOOL) playerTurn: (int) x : (int) y;
 
 @end

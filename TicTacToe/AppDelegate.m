@@ -8,13 +8,13 @@
 
 #import "AppDelegate.h"
 
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
-    //Game *g = [[Game alloc]init];
-    
+   
     return YES;
 }
 							
