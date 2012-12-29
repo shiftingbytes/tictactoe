@@ -18,6 +18,7 @@
 @synthesize currentPlayer;
 @synthesize game;
 @synthesize color;
+//@synthesize view;
 
 - (void)viewDidLoad
 {
@@ -79,10 +80,14 @@
             
             if (currentPlayer.hasWon) {
                 game.finish = YES;
+                NSString *message =[NSString stringWithFormat:@"Spieler %i hat gewonnen!",currentPlayer.number];
+                [self alertInfo: message];
             }
             
             else if (game.checkDraw) {
                 game.finish = YES;
+                NSString *message = @"Spiel endet unentschieden.";
+                [self alertInfo: message];
             }
 
             else{
@@ -107,7 +112,6 @@
 
     else if (currentPlayer==game.player1)
     {
-        
         currentPlayer=game.player2;
         self.color=[UIColor blueColor];
     }
@@ -120,5 +124,45 @@
     NSLog(@"Active Player: %i",currentPlayer.number);
 
 }
+
+-(void) alertInfo:(NSString*) message
+{
+
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Spiel beendet"
+                                                   message:message
+                                                  delegate:self
+                                         cancelButtonTitle:@"Beenden"
+                                         otherButtonTitles:@"Nochmal spielen", nil];
+    [alert show];
+
+}
+
+-(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"Button %i was pressed",buttonIndex);
+    if(buttonIndex==1)
+        
+    {
+        [game resetBoard];
+        [self resetColors];
+        game.finish = NO;
+        currentPlayer.hasWon = NO;
+        game.moveCounter = 0;
+        
+        
+    }
+
+}
+
+-(void)resetColors
+{
+    UIView *mainElement = [self.view viewWithTag:11];
+    
+    for (UIButton* button in mainElement.subviews) {
+        button.backgroundColor = [UIColor whiteColor];
+    }
+
+}
+
 
 @end
