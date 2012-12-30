@@ -95,7 +95,15 @@ int map[9][2];
         
         if (currentPlayer.hasWon) {
             game.finish = YES;
-            NSString *message =[NSString stringWithFormat:@"Spieler %i hat gewonnen!",currentPlayer.number];
+            NSString *message;
+            if(currentPlayer.number == 1)
+            {
+                message = @"Sie haben gewonnen!";
+            }
+            else
+            {
+                message = @"Computer hat gewonnen.";
+            }
             [self alertInfo: message];
         }
         
@@ -155,8 +163,8 @@ int map[9][2];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Spiel beendet"
                                                    message:message
                                                   delegate:self
-                                         cancelButtonTitle:@"Beenden"
-                                         otherButtonTitles:@"Nochmal spielen", nil];
+                                         cancelButtonTitle:@"Nochmal spielen"
+                                         otherButtonTitles:nil, nil];
     [alert show];
 
 }
@@ -164,7 +172,7 @@ int map[9][2];
 -(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     NSLog(@"Button %i was pressed",buttonIndex);
-    if(buttonIndex==1)
+    if(buttonIndex==0)
         
     {
         [game newGame];
