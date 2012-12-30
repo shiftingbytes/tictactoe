@@ -20,9 +20,7 @@
 @synthesize currentPlayer;
 @synthesize game;
 
-
 int map[9][2];
-
 
 - (void)viewDidLoad
 {
@@ -109,7 +107,7 @@ int map[9][2];
         
         else{
             
-        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(nextPlayer) userInfo:nil repeats:NO];
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(nextPlayer) userInfo:nil repeats:NO];
             
                        
         }
