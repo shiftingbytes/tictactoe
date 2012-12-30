@@ -27,7 +27,9 @@ extern int const GAMEEND;
 @property(nonatomic,assign) int moveCounter;
 
 
--(void) resetBoard;
+-(void) newGame;
 -(BOOL) checkDraw;
+-(int) aiMove;
+
 
 @end

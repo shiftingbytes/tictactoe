@@ -12,19 +12,51 @@
 
 @interface ViewController ()
 
+
+
 @end
 
 @implementation ViewController
 @synthesize currentPlayer;
 @synthesize game;
-@synthesize color;
-//@synthesize view;
+
+
+int map[9][2];
+
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     self.game = [[Game alloc]init];
+    //init coordinates to map buttons to gameboard
+    map[0][0]=2;
+    map[0][1]=0;
+    
+    map[1][0]=2;
+    map[1][1]=1;
+    
+    map[2][0]=2;
+    map[2][1]=2;
+    
+    map[3][0]=1;
+    map[3][1]=0;
+    
+    map[4][0]=1;
+    map[4][1]=1;
+    
+    map[5][0]=1;
+    map[5][1]=2;
+    
+    map[6][0]=0;
+    map[6][1]=0;
+    
+    map[7][0]=0;
+    map[7][1]=1;
+    
+    map[8][0]=0;
+    map[8][1]=2;
+    
     [self nextPlayer];
     
 }
@@ -37,68 +69,58 @@
 
 -(IBAction)fieldPressed:(id)sender
 {
-    if (!game.finish)
+    if (!game.finish && !currentPlayer.isAi)
     {
-        UIButton *button = sender;
-        
+        UIButton *b = sender;
         int x; int y;
-        switch (button.tag) {
-            case 0:
-                x=2;y=0;
-                break;
-            case 1:
-                x=2;y=1;
-                break;
-            case 2:
-                x=2;y=2;
-                break;
-            case 3:
-                x=1;y=0;
-                break;
-            case 4:
-                x=1;y=1;
-                break;
-            case 5:
-                x=1;y=2;
-                break;
-            case 6:
-                x=0;y=0;
-                break;
-            case 7:
-                x=0;y=1;
-                break;
-            case 8:
-                x=0;y=2;
-                break;
-            default:
-                break;
-        }
-        if([currentPlayer playerTurn:x :y ])
-        {
-            button.backgroundColor = color;
-            game.moveCounter++;
-            
-            if (currentPlayer.hasWon) {
-                game.finish = YES;
-                NSString *message =[NSString stringWithFormat:@"Spieler %i hat gewonnen!",currentPlayer.number];
-                [self alertInfo: message];
-            }
-            
-            else if (game.checkDraw) {
-                game.finish = YES;
-                NSString *message = @"Spiel endet unentschieden.";
-                [self alertInfo: message];
-            }
-
-            else{
-                            
-            [self nextPlayer];
-            }
-        }
-        
+        //mapping buttons to coordinates on gameboard
+        x = map[b.tag][0];
+        y = map[b.tag][1];
+        [self playerTurn:x :y];
 
     }
     
+}
+-(void) playerTurn:(int)x :(int)y
+{
+    if (currentPlayer.isAi) {
+        x = [game aiMove];
+        y = [game aiMove];
+    }
+    
+    
+    if([currentPlayer playerTurn:x :y ])
+    {
+        
+        [self drawButtonColors];
+        game.moveCounter++;
+        
+        if (currentPlayer.hasWon) {
+            game.finish = YES;
+            NSString *message =[NSString stringWithFormat:@"Spieler %i hat gewonnen!",currentPlayer.number];
+            [self alertInfo: message];
+        }
+        
+        else if (game.checkDraw) {
+            game.finish = YES;
+            NSString *message = @"Spiel endet unentschieden.";
+            [self alertInfo: message];
+        }
+        
+        else{
+            
+        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(nextPlayer) userInfo:nil repeats:NO];
+            
+                       
+        }
+    }
+    //call again if no valid result was returned
+    else if(currentPlayer.isAi)
+    {
+        [self playerTurn:0 :0];
+    }
+
+
 }
 
 -(void) nextPlayer{
@@ -106,21 +128,25 @@
     if(!currentPlayer)
     {
         currentPlayer=game.player1;
-        self.color=[UIColor redColor];
-    }
+            }
     
 
     else if (currentPlayer==game.player1)
     {
         currentPlayer=game.player2;
-        self.color=[UIColor blueColor];
+        
+        if(currentPlayer.isAi)
+        {
+            [self playerTurn:0 :0];
+        }
+
     }
     
     else if (currentPlayer==game.player2)
     {
         currentPlayer=game.player1;
-        self.color=[UIColor redColor];
     }
+    
     NSLog(@"Active Player: %i",currentPlayer.number);
 
 }
@@ -143,26 +169,51 @@
     if(buttonIndex==1)
         
     {
-        [game resetBoard];
-        [self resetColors];
-        game.finish = NO;
-        currentPlayer.hasWon = NO;
-        game.moveCounter = 0;
-        
-        
+        [game newGame];
+        [self drawButtonColors];
+        currentPlayer = game.player1;
+                
     }
 
 }
 
--(void)resetColors
+
+-(void) drawButtonColors
 {
     UIView *mainElement = [self.view viewWithTag:11];
-    
-    for (UIButton* button in mainElement.subviews) {
-        button.backgroundColor = [UIColor whiteColor];
+    int value;
+    for (UIButton* b in mainElement.subviews) {
+        
+        for (int i = 0; i < [game.board count]; i++) {
+            for (int j = 0; j<[[game.board objectAtIndex:i] count]; j++) {
+               
+                if(map[b.tag][0] == i && map[b.tag][1]==j)
+                {
+                NSNumber *n = [[game.board objectAtIndex:i] objectAtIndex:j];
+                value = [n intValue];
+                
+                switch (value) {
+                    case 0:
+                        b.backgroundColor = [UIColor whiteColor];
+                        break;
+                    case 1:
+                        b.backgroundColor = [UIColor redColor];
+                        break;
+                    case 2:
+                        b.backgroundColor = [UIColor blueColor];
+                        break;
+                    default:
+                        break;
+                        }
+                }
+                
+            }
+        }
+        
+        
     }
 
-}
 
+}
 
 @end

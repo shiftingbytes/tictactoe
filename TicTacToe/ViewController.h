@@ -13,13 +13,13 @@
 @interface ViewController : UIViewController <UIAlertViewDelegate>
 @property (nonatomic,strong) Player *currentPlayer;
 @property (nonatomic,strong) Game *game;
-@property (nonatomic,strong) UIColor *color;
+
 
 
 -(IBAction)fieldPressed:(id)sender;
 
 -(void) nextPlayer;
+-(void) playerTurn:(int)x: (int) y;
 -(void) alertInfo:(NSString*) message;
-
--(void) resetColors;
+-(void) drawButtonColors;
 @end

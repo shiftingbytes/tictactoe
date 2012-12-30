@@ -55,6 +55,7 @@ int const GAMEEND = 4;
     self.player2.board = self.board;
     self.player1.number = 1;
     self.player2.number = 2;
+    self.player2.isAi   =YES;
     
     return self;
 }
@@ -71,7 +72,13 @@ int const GAMEEND = 4;
     return 0;
 }
 
--(void)resetBoard{
+-(void)newGame{
+    
+    self.finish = NO;
+    player1.hasWon = NO;
+    player2.hasWon = NO;
+    self.moveCounter = 0;
+    //reset board
     for (int i = 0; i < [self.board count]; i++) {
         for (int j = 0; j<[[self.board objectAtIndex:i] count]; j++) {
             NSNumber *n = [NSNumber numberWithInt:0];
@@ -80,7 +87,11 @@ int const GAMEEND = 4;
     }
 }
 
+-(int)aiMove{
 
+    int r = arc4random() % 3;
+    return r;
+}
 
 
 @end
