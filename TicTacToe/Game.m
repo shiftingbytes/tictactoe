@@ -87,11 +87,6 @@ int const GAMEEND = 4;
     }
 }
 
--(int)aiMove{
-
-    int r = arc4random() % 3;
-    return r;
-}
 
 
 @end

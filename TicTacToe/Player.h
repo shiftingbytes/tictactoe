@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-
+@class AiValidationResult;
 
 @interface Player : NSObject
 @property BOOL isAi;
@@ -18,5 +18,6 @@
 
 -(int) move: (int) x : (int) y;
 -(BOOL) playerTurn: (int) x : (int) y;
+-(NSMutableArray*)aiMove;
 
 @end

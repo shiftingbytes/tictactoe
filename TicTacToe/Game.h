@@ -29,7 +29,7 @@ extern int const GAMEEND;
 
 -(void) newGame;
 -(BOOL) checkDraw;
--(int) aiMove;
+
 
 
 @end

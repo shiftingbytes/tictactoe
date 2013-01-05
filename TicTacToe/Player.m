@@ -17,7 +17,6 @@
 -(id)init{
 
     self=[super init];
-    
     return self;
 
 }
@@ -109,6 +108,7 @@
             
         }
     }
+    
     //check anti diagonal
     for(int i=0;i<FIELDSIZE;i++)
     {
@@ -124,6 +124,124 @@
     }
     return 0;
 }
+
+
+-(NSMutableArray*) aiMove;
+{
+    NSMutableArray *array = [[NSMutableArray alloc]init];
+    int x = -1;
+    int y = -1;
+    NSNumber *myNumber = [NSNumber numberWithInt:self.number];
+    //NSNumber *opponentNumber = [NSNumber numberWithInt:abs(self.number - 3)];
+    NSNumber *empty = [NSNumber numberWithInt:0];
+    
+    int myCounter =0;
+    int opponentCounter =0;
+    
+    
+    //check rows
+    for(int i=0;i<FIELDSIZE;i++)
+    {
+        int counter =0;
+        int emptycounter =0;
+        for(int j=0;j<FIELDSIZE;j++)
+        {
+            if([[board objectAtIndex:i]objectAtIndex:j] != empty)
+            {
+                counter++;
+                if ([[board objectAtIndex:i]objectAtIndex:j] == myNumber)
+                {
+                    myCounter++;
+                }
+                else
+                {
+                    opponentCounter++;
+                }
+                
+            }
+            else
+            {
+                emptycounter++;
+            }
+        }
+        if(counter >0 && emptycounter >0)
+        {
+            x=i;
+            for(int j=0;j<FIELDSIZE;j++)
+            {
+                if([[board objectAtIndex:x]objectAtIndex:j] == empty)
+                {
+                    y=j;
+                    break;
+                }
+            }
+            
+        
+        }
+        
+    }
+    
+    //check cols
+    if(opponentCounter<2 && myCounter <2)
+    {
+        
+        for(int i=0;i<FIELDSIZE;i++)
+        {
+        int counter =0;
+        int emptycounter =0;
+        for(int j=0;j<FIELDSIZE;j++)
+        {
+            if([[board objectAtIndex:j]objectAtIndex:i] != empty)
+            {
+                counter++;
+            }
+            else
+            {
+                emptycounter++;
+            }
+        }
+        if(counter >0 && emptycounter >0)
+        {
+            y=i;
+            for(int j=0;j<FIELDSIZE;j++)
+            {
+                if([[board objectAtIndex:j]objectAtIndex:y] == empty)
+                {
+                    x=j;
+                    break;
+                }
+            }
+            
+            
+        }
+        
+        }
+    
+    }
+    
+    
+    if(y==-1)
+    {
+        y = arc4random() % 3;
+    }
+    if(x==-1)
+    {
+        x = arc4random() % 3;
+    }
+    
+    
+    NSNumber *xc = [NSNumber numberWithInt:x];
+    NSNumber *yc = [NSNumber numberWithInt:y];
+    [array addObject:xc];
+    [array addObject:yc];
+    return array;
+
+    
+    
+    
+}
+
+
 
 
 

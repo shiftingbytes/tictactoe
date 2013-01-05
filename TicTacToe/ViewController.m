@@ -82,8 +82,9 @@ int map[9][2];
 -(void) playerTurn:(int)x :(int)y
 {
     if (currentPlayer.isAi) {
-        x = [game aiMove];
-        y = [game aiMove];
+        NSMutableArray *coordinates = [currentPlayer aiMove];
+        x = [[coordinates objectAtIndex:0]intValue];
+        y = [[coordinates objectAtIndex:1]intValue];
     }
     
     
