@@ -46,7 +46,6 @@
 
 -(int) move:(int)x :(int)y
 {
-    NSNumber *n = [NSNumber numberWithInt:self.number];
     
     //place player number on gameboard if it is not taken already
      NSNumber *zero = [NSNumber numberWithInt:0];
@@ -64,64 +63,12 @@
     }
     
     //check victory conditions
-    //check col
-    
-    for(int i=0;i<FIELDSIZE;i++)
+    if([self checkWinningMove:self.number :x :y])
     {
-        if([[board objectAtIndex:x]objectAtIndex:i] != n)
-           {
-               break;
-           }
-        if(i == FIELDSIZE-1)
-           {
-               return PLAYERWON;
-           }
-           
-    }
-    //check rows
-    for(int i=0;i<FIELDSIZE;i++)
-    {
-        if([[board objectAtIndex:i]objectAtIndex:y] != n)
-        {
-            break;
-        }
-        if(i == FIELDSIZE-1)
-        {
-            return PLAYERWON;
-        }
-        
+        return PLAYERWON;
     }
     
-    if(x == y)
-    {
-        //we're on a diagonal
-        for(int i=0;i<FIELDSIZE;i++)
-        {
-            if([[board objectAtIndex:i]objectAtIndex:i] != n)
-            {
-                break;
-            }
-            if(i == FIELDSIZE-1)
-            {
-                return PLAYERWON;
-            }
-            
-        }
-    }
-    
-    //check anti diagonal
-    for(int i=0;i<FIELDSIZE;i++)
-    {
-        if([[board objectAtIndex:i]objectAtIndex:(FIELDSIZE-1)-i] != n)
-        {
-            break;
-        }
-        if(i == FIELDSIZE-1)
-        {
-            return PLAYERWON;
-        }
-        
-    }
+   
     return 0;
 }
 
@@ -129,99 +76,56 @@
 -(NSMutableArray*) aiMove;
 {
     NSMutableArray *array = [[NSMutableArray alloc]init];
+    NSNumber *zero = [NSNumber numberWithInt:0];
     int x = -1;
     int y = -1;
-    NSNumber *myNumber = [NSNumber numberWithInt:self.number];
-    //NSNumber *opponentNumber = [NSNumber numberWithInt:abs(self.number - 3)];
-    NSNumber *empty = [NSNumber numberWithInt:0];
+    int myNumber = self.number;
+    int opponentNumber = abs(self.number - 3);
+    NSNumber *n;
+    NSNumber *o;
     
-    int myCounter =0;
-    int opponentCounter =0;
-    
-    
-    //check rows
+
     for(int i=0;i<FIELDSIZE;i++)
     {
-        int counter =0;
-        int emptycounter =0;
         for(int j=0;j<FIELDSIZE;j++)
-        {
-            if([[board objectAtIndex:i]objectAtIndex:j] != empty)
-            {
-                counter++;
-                if ([[board objectAtIndex:i]objectAtIndex:j] == myNumber)
+        {   
+            o = [[board objectAtIndex:i] objectAtIndex:j];
+            
+            if ([o isEqualToNumber:zero]) {
+                
+                n = [NSNumber numberWithInt:opponentNumber];
+                [[board objectAtIndex:i] replaceObjectAtIndex:j withObject:n];
+                
+                if([self checkWinningMove:opponentNumber :i :j])
                 {
-                    myCounter++;
-                }
-                else
-                {
-                    opponentCounter++;
+                    x=i;y=j;
+                    NSLog(@"Winning Move: x:%i y:%i",i,j);
+                    
                 }
                 
-            }
-            else
-            {
-                emptycounter++;
-            }
-        }
-        if(counter >0 && emptycounter >0)
-        {
-            x=i;
-            for(int j=0;j<FIELDSIZE;j++)
-            {
-                if([[board objectAtIndex:x]objectAtIndex:j] == empty)
+                n = [NSNumber numberWithInt:myNumber];
+                [[board objectAtIndex:i] replaceObjectAtIndex:j withObject:n];
+                
+                if([self checkWinningMove:myNumber :i :j])
                 {
-                    y=j;
-                    break;
+                    x=i;y=j;
+                    NSLog(@"Winning Move: x:%i y:%i",i,j);
+                    
                 }
+                
+                [[board objectAtIndex:i] replaceObjectAtIndex:j withObject:o];
             }
             
-        
+            
+          
         }
-        
     }
     
-    //check cols
-    if(opponentCounter<2 && myCounter <2)
-    {
-        
-        for(int i=0;i<FIELDSIZE;i++)
-        {
-        int counter =0;
-        int emptycounter =0;
-        for(int j=0;j<FIELDSIZE;j++)
-        {
-            if([[board objectAtIndex:j]objectAtIndex:i] != empty)
-            {
-                counter++;
-            }
-            else
-            {
-                emptycounter++;
-            }
-        }
-        if(counter >0 && emptycounter >0)
-        {
-            y=i;
-            for(int j=0;j<FIELDSIZE;j++)
-            {
-                if([[board objectAtIndex:j]objectAtIndex:y] == empty)
-                {
-                    x=j;
-                    break;
-                }
-            }
-            
-            
-        }
-        
-        }
-    
-    }
-    
-    
+
+
     if(y==-1)
     {
+        NSLog(@"Random AI");
         y = arc4random() % 3;
     }
     if(x==-1)
@@ -235,13 +139,78 @@
     [array addObject:xc];
     [array addObject:yc];
     return array;
-
-    
-    
     
 }
 
 
+
+-(BOOL)checkWinningMove:(int) playerNumber: (int) x :(int) y
+ {
+    NSNumber *n = [NSNumber numberWithInt:playerNumber];
+     
+     //check victory conditions
+     //check col
+     
+     for(int i=0;i<FIELDSIZE;i++)
+     {
+         if([[board objectAtIndex:x]objectAtIndex:i] != n)
+         {
+             break;
+         }
+         if(i == FIELDSIZE-1)
+         {
+             return YES;
+         }
+         
+     }
+     //check rows
+     for(int i=0;i<FIELDSIZE;i++)
+     {
+         if([[board objectAtIndex:i]objectAtIndex:y] != n)
+         {
+             break;
+         }
+         if(i == FIELDSIZE-1)
+         {
+             return YES;
+         }
+         
+     }
+     
+     if(x == y)
+     {
+         //we're on a diagonal
+         for(int i=0;i<FIELDSIZE;i++)
+         {
+             if([[board objectAtIndex:i]objectAtIndex:i] != n)
+             {
+                 break;
+             }
+             if(i == FIELDSIZE-1)
+             {
+                 return YES;
+             }
+             
+         }
+     }
+     
+     //check anti diagonal
+     for(int i=0;i<FIELDSIZE;i++)
+     {
+         if([[board objectAtIndex:i]objectAtIndex:(FIELDSIZE-1)-i] != n)
+         {
+             break;
+         }
+         if(i == FIELDSIZE-1)
+         {
+             return YES;
+         }
+         
+     }
+ 
+ 
+     return NO;
+ }
 
 
 
