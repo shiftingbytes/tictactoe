@@ -83,40 +83,45 @@
     int opponentNumber = abs(self.number - 3);
     NSNumber *n;
     NSNumber *o;
+    BOOL win = NO;
     
 
     for(int i=0;i<FIELDSIZE;i++)
     {
         for(int j=0;j<FIELDSIZE;j++)
         {   
-            o = [[board objectAtIndex:i] objectAtIndex:j];
+                if (!win)
+                {   
+                    o = [[board objectAtIndex:i] objectAtIndex:j];
             
-            if ([o isEqualToNumber:zero]) {
+                    if ([o isEqualToNumber:zero]) {
+                        
+                        n = [NSNumber numberWithInt:opponentNumber];
+                        [[board objectAtIndex:i] replaceObjectAtIndex:j withObject:n];
                 
-                n = [NSNumber numberWithInt:opponentNumber];
-                [[board objectAtIndex:i] replaceObjectAtIndex:j withObject:n];
-                
-                if([self checkWinningMove:opponentNumber :i :j])
-                {
-                    x=i;y=j;
-                    NSLog(@"Winning Move: x:%i y:%i",i,j);
+                        if([self checkWinningMove:opponentNumber :i :j])
+                        {
+                            x=i;y=j;
+                           // NSLog(@"Winning Move: x:%i y:%i",i,j);
                     
-                }
+                        }
                 
-                n = [NSNumber numberWithInt:myNumber];
-                [[board objectAtIndex:i] replaceObjectAtIndex:j withObject:n];
+                        n = [NSNumber numberWithInt:myNumber];
+                        [[board objectAtIndex:i] replaceObjectAtIndex:j withObject:n];
                 
-                if([self checkWinningMove:myNumber :i :j])
-                {
-                    x=i;y=j;
-                    NSLog(@"Winning Move: x:%i y:%i",i,j);
+                        if([self checkWinningMove:myNumber :i :j])
+                        {
+                            x=i;y=j;
+                            //NSLog(@"Winning Move: x:%i y:%i",i,j);
+                            win = YES;
                     
-                }
+                        
+                        }
                 
-                [[board objectAtIndex:i] replaceObjectAtIndex:j withObject:o];
-            }
-            
-            
+                        [[board objectAtIndex:i] replaceObjectAtIndex:j withObject:o];
+                    }
+                
+           }
           
         }
     }
@@ -144,7 +149,7 @@
 
 
 
--(BOOL)checkWinningMove:(int) playerNumber: (int) x :(int) y
+-(BOOL)checkWinningMove :(int) playerNumber : (int) x :(int) y
  {
     NSNumber *n = [NSNumber numberWithInt:playerNumber];
      

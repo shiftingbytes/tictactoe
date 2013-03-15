@@ -19,7 +19,7 @@
 -(IBAction)fieldPressed:(id)sender;
 
 -(void) nextPlayer;
--(void) playerTurn:(int)x: (int) y;
+-(void) playerTurn:(int)x : (int) y;
 -(void) alertInfo:(NSString*) message;
 -(void) drawButtonColors;
 @end
