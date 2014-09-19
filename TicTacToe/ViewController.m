@@ -172,7 +172,7 @@ int map[9][2];
 
 -(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    NSLog(@"Button %i was pressed",buttonIndex);
+    NSLog(@"Button %li was pressed",(long)buttonIndex);
     if(buttonIndex==0)
         
     {
